@@ -151,7 +151,9 @@ const toggleMask = (
     | 'microsoft']['fields'] 
     | keyof Config['providers']['openid']['fields']
 ) => {
-  maskState[provider][fieldKey] = !maskState[provider][fieldKey];
+  if (fieldKey === 'client_id' || fieldKey === 'client_secret') {
+    maskState[provider][fieldKey] = !maskState[provider][fieldKey];
+  }
 };
 
 const isMasked = (
@@ -161,5 +163,5 @@ const isMasked = (
     | 'github'
     | 'microsoft']['fields'] 
     | keyof Config['providers']['openid']['fields']
-) => maskState[provider][fieldKey];
+) => fieldKey === 'client_id' || fieldKey === 'client_secret' ? maskState[provider][fieldKey] : false;
 </script>
