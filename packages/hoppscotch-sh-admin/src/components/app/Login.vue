@@ -48,9 +48,13 @@
         <HoppSmartItem
           v-if="allowedAuthProviders.includes('OPENID')"
           :loading="signingInWithOpenid"
+          :icon="
+            h('img', { src: openidMetadata.icon, alt: openidMetadata.name })
+          "
+          ref="openidButton"
           :label="t('state.continue_openid', { issuer: openidMetadata.name })"
           @click="signInWithOpenid"
-          />
+        />
         <HoppSmartItem
           v-if="allowedAuthProviders.includes('EMAIL')"
           :icon="IconEmail"
@@ -158,7 +162,7 @@
 
 <script setup lang="ts">
 import { HoppSmartItem } from '@hoppscotch/ui';
-import { onMounted, ref } from 'vue';
+import { h, onMounted, ref } from 'vue';
 import { useI18n } from '~/composables/i18n';
 import { useToast } from '~/composables/toast';
 import { auth } from '~/helpers/auth';
@@ -254,7 +258,7 @@ const signInWithOpenid = () => {
   }
 
   signingInWithOpenid.value = false;
-}
+};
 
 const signInWithEmail = async () => {
   signingInWithEmail.value = true;

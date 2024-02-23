@@ -78,6 +78,10 @@ export class InfraConfigService implements OnModuleInit {
         value: process.env.OPENID_ISSUER_NAME,
       },
       {
+        name: InfraConfigEnum.OPENID_ISSUER_ICON_URL,
+        value: process.env.OPENID_ISSUER_ICON_URL,
+      },
+      {
         name: InfraConfigEnum.OPENID_AUTHORIZATION_ENDPOINT,
         value: process.env.OPENID_AUTHORIZATION_ENDPOINT,
       },
@@ -360,7 +364,7 @@ export class InfraConfigService implements OnModuleInit {
   getOpenidIssuerMetadata() {
     return {
       name: this.configService.get('INFRA.OPENID_ISSUER_NAME'),
-      icon: this.configService.get('INFRA.OPENID_ISSUER_ICON'),
+      icon: this.configService.get('INFRA.OPENID_ISSUER_ICON_URL'),
     };
   }
 

@@ -103,7 +103,7 @@ export function useConfigHandler(updatedConfigs?: Config) {
       'MAILER_ADDRESS_FROM',
       'OPENID_ISSUER_URL',
       'OPENID_ISSUER_NAME',
-      // 'OPENID_ISSUER_ICON_URL',
+      'OPENID_ISSUER_ICON_URL',
       'OPENID_AUTHORIZATION_ENDPOINT',
       'OPENID_TOKEN_ENDPOINT',
       'OPENID_USERINFO_ENDPOINT',
