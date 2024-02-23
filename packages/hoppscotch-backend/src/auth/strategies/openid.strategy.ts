@@ -87,7 +87,7 @@ export class OpenidStrategy extends PassportStrategy(Strategy, 'openid') {
      * * If user was created with another provider findUserByEmail may return true
      */
     const providerAccountExists =
-      await this.authService.checkIfProviderAccountExists(user.value, userinfo);
+      await this.authService.checkIfProviderAccountExists(user.value, profile);
 
     if (O.isNone(providerAccountExists))
       await this.usersService.createProviderAccount(

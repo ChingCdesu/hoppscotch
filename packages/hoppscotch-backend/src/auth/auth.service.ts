@@ -186,7 +186,7 @@ export class AuthService {
       where: {
         verifyProviderAccount: {
           provider: SSOUserData.provider,
-          providerAccountId: SSOUserData.id,
+          providerAccountId: SSOUserData.id || SSOUserData.sub,
         },
       },
     });
