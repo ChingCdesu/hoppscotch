@@ -31,7 +31,7 @@
 
           <div v-if="provider.enabled" class="ml-12">
             <div
-              v-for="field in providerConfigFields"
+              v-for="field in provider.name === 'openid' ? openidConfigFields : providerConfigFields"
               :key="field.key"
               class="mt-5"
             >
@@ -44,7 +44,7 @@
                   "
                   :disabled="isMasked(provider.name, field.key)"
                   :autofocus="false"
-                  class="!my-2 !bg-primaryLight"
+                  class="!my-2 !bg-primaryLight flex-1"
                 />
                 <HoppButtonSecondary
                   :icon="
@@ -89,10 +89,37 @@ const capitalize = (text: string) =>
 // Masking sensitive fields
 type Field = {
   name: string;
-  key: keyof Config['providers']['google' | 'github' | 'microsoft']['fields'];
+  key: keyof Config['providers'][
+    | 'google'
+    | 'github'
+    | 'microsoft']['fields'] 
+    | keyof Config['providers']['openid']['fields'];
 };
 
 const providerConfigFields = reactive<Field[]>([
+  { name: t('configs.auth_providers.client_id'), key: 'client_id' },
+  { name: t('configs.auth_providers.client_secret'), key: 'client_secret' },
+]);
+
+const openidConfigFields = reactive<Field[]>([
+  { name: t('configs.auth_providers.issuer_url'), key: 'issuer_url' },
+  { name: t('configs.auth_providers.issuer_name'), key: 'issuer_name' },
+  { name: t('configs.auth_providers.issuer_icon_url'), key: 'issuer_icon_url' },
+  {
+    name: t('configs.auth_providers.authorization_endpoint'),
+    key: 'authorization_endpoint',
+  },
+  { name: t('configs.auth_providers.token_endpoint'), key: 'token_endpoint' },
+  {
+    name: t('configs.auth_providers.userinfo_endpoint'),
+    key: 'userinfo_endpoint',
+  },
+  { name: t('configs.auth_providers.jwks_uri'), key: 'jwks_uri' },
+  { name: t('configs.auth_providers.scopes'), key: 'scopes' },
+  {
+    name: t('configs.auth_providers.end_session_endpoint'),
+    key: 'end_session_endpoint',
+  },
   { name: t('configs.auth_providers.client_id'), key: 'client_id' },
   { name: t('configs.auth_providers.client_secret'), key: 'client_secret' },
 ]);
@@ -110,6 +137,10 @@ const maskState = reactive({
     client_id: true,
     client_secret: true,
   },
+  openid: {
+    client_id: true,
+    client_secret: true,
+  },
 });
 
 const toggleMask = (
@@ -117,7 +148,8 @@ const toggleMask = (
   fieldKey: keyof Config['providers'][
     | 'google'
     | 'github'
-    | 'microsoft']['fields']
+    | 'microsoft']['fields'] 
+    | keyof Config['providers']['openid']['fields']
 ) => {
   maskState[provider][fieldKey] = !maskState[provider][fieldKey];
 };
@@ -127,6 +159,7 @@ const isMasked = (
   fieldKey: keyof Config['providers'][
     | 'google'
     | 'github'
-    | 'microsoft']['fields']
+    | 'microsoft']['fields'] 
+    | keyof Config['providers']['openid']['fields']
 ) => maskState[provider][fieldKey];
 </script>

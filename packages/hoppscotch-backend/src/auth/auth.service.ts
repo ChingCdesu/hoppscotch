@@ -387,4 +387,8 @@ export class AuthService {
   getAuthProviders() {
     return this.infraConfigService.getAllowedAuthProviders();
   }
+
+  getOpenidIssuerMetadata() {
+    return this.infraConfigService.getOpenidIssuerMetadata();
+  }
 }
