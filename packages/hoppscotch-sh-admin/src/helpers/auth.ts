@@ -155,6 +155,11 @@ export const auth = {
   getAuthEventsStream: () => authEvents$,
   getCurrentUser: () => currentUser$.value,
 
+  getOpenidMetadata: async () => {
+    const res = await authQuery.getOpenidMetadata();
+    return res.data?.metadata;
+  },
+
   performAuthInit: () => {
     const currentUser = JSON.parse(getLocalConfig('login_state') ?? 'null');
     currentUser$.next(currentUser);
@@ -185,6 +190,12 @@ export const auth = {
     window.location.href = `${
       import.meta.env.VITE_BACKEND_API_URL
     }/auth/microsoft?redirect_uri=${import.meta.env.VITE_ADMIN_URL}`;
+  },
+
+  signInUserWithOpenid: () => {
+    window.location.href = `${
+      import.meta.env.VITE_BACKEND_API_URL
+    }/auth/openid?redirect_uri=${import.meta.env.VITE_ADMIN_URL}`;
   },
 
   signInWithEmailLink: (url: string) => {

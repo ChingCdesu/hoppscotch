@@ -14,6 +14,7 @@ import { AuthProvider, authProviderCheck } from './helper';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { loadInfraConfiguration } from 'src/infra-config/helper';
 import { InfraConfigModule } from 'src/infra-config/infra-config.module';
+import { OpenidStrategy } from './strategies/openid.strategy';
 
 @Module({
   imports: [
@@ -46,6 +47,9 @@ export class AuthModule {
         : []),
       ...(authProviderCheck(AuthProvider.MICROSOFT, allowedAuthProviders)
         ? [MicrosoftStrategy]
+        : []),
+      ...(authProviderCheck(AuthProvider.OPENID, allowedAuthProviders)
+        ? [OpenidStrategy]
         : []),
     ];
 

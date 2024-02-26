@@ -16,7 +16,7 @@ import {
 } from '~/helpers/backend/graphql';
 
 // Types
-export type SsoAuthProviders = 'google' | 'microsoft' | 'github';
+export type SsoAuthProviders = 'google' | 'microsoft' | 'github' | 'openid';
 
 export type Config = {
   providers: {
@@ -44,6 +44,23 @@ export type Config = {
         client_secret: string;
       };
     };
+    openid: {
+      name: SsoAuthProviders,
+      enabled: boolean
+      fields: {
+        issuer_url: string;
+        issuer_name: string;
+        issuer_icon_url: string;
+        authorization_endpoint: string;
+        token_endpoint: string;
+        userinfo_endpoint: string;
+        jwks_uri: string;
+        scopes: string;
+        end_session_endpoint: string;
+        client_id: string;
+        client_secret: string;
+      };
+    }
   };
 
   mailConfigs: {
@@ -84,6 +101,17 @@ export function useConfigHandler(updatedConfigs?: Config) {
       'GITHUB_CLIENT_SECRET',
       'MAILER_SMTP_URL',
       'MAILER_ADDRESS_FROM',
+      'OPENID_ISSUER_URL',
+      'OPENID_ISSUER_NAME',
+      'OPENID_ISSUER_ICON_URL',
+      'OPENID_AUTHORIZATION_ENDPOINT',
+      'OPENID_TOKEN_ENDPOINT',
+      'OPENID_USERINFO_ENDPOINT',
+      'OPENID_JWKS_URI',
+      'OPENID_SCOPE',
+      'OPENID_END_SESSION_ENDPOINT',
+      'OPENID_CLIENT_ID',
+      'OPENID_CLIENT_SECRET',
     ] as InfraConfigEnum[],
   });
 
@@ -147,6 +175,45 @@ export function useConfigHandler(updatedConfigs?: Config) {
               )?.value ?? '',
           },
         },
+        openid: {
+          name: 'openid',
+          enabled: allowedAuthProviders.value.includes('OPENID'),
+          fields: {
+            issuer_url:
+              infraConfigs.value.find((x) => x.name === 'OPENID_ISSUER_URL')
+                ?.value ?? '',
+            issuer_name:
+              infraConfigs.value.find((x) => x.name === 'OPENID_ISSUER_NAME')
+                ?.value ?? '',
+            issuer_icon_url:
+              infraConfigs.value.find((x) => x.name === 'OPENID_ISSUER_ICON_URL')
+                ?.value ?? '',
+            authorization_endpoint:
+              infraConfigs.value.find((x) => x.name === 'OPENID_AUTHORIZATION_ENDPOINT')
+                ?.value ?? '',
+            token_endpoint:
+              infraConfigs.value.find((x) => x.name === 'OPENID_TOKEN_ENDPOINT')
+                ?.value ?? '',
+            userinfo_endpoint: 
+              infraConfigs.value.find((x) => x.name === 'OPENID_USERINFO_ENDPOINT')
+                ?.value ?? '',
+            jwks_uri:
+              infraConfigs.value.find((x) => x.name === 'OPENID_JWKS_URI')
+                ?.value ?? '',
+            scopes:
+              infraConfigs.value.find((x) => x.name === 'OPENID_SCOPE')
+                ?.value ?? '',
+            end_session_endpoint:
+              infraConfigs.value.find((x) => x.name === 'OPENID_END_SESSION_ENDPOINT')
+                ?.value ?? '',
+            client_id:
+              infraConfigs.value.find((x) => x.name === 'OPENID_CLIENT_ID')
+                ?.value ?? '',
+            client_secret:
+              infraConfigs.value.find((x) => x.name === 'OPENID_CLIENT_SECRET')
+                ?.value ?? '',
+          }
+        }
       },
       mailConfigs: {
         name: 'email',

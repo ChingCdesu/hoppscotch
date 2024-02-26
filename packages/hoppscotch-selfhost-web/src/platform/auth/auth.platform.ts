@@ -8,7 +8,7 @@ import { PersistenceService } from "@hoppscotch/common/services/persistence"
 import axios from "axios"
 import { BehaviorSubject, Subject } from "rxjs"
 import { Ref, ref, watch } from "vue"
-import { getAllowedAuthProviders } from "./auth.api"
+import { getAllowedAuthProviders, getOpenidMetadata } from "./auth.api"
 
 export const authEvents$ = new Subject<AuthEvent | { event: "token_refresh" }>()
 const currentUser$ = new BehaviorSubject<HoppUser | null>(null)
@@ -34,6 +34,10 @@ async function signInUserWithMicrosoftFB() {
   window.location.href = `${
     import.meta.env.VITE_BACKEND_API_URL
   }/auth/microsoft`
+}
+
+async function signInUserWithOpenidFB() {
+  window.location.href = `${import.meta.env.VITE_BACKEND_API_URL}/auth/openid`
 }
 
 async function getInitialUserDetails() {
@@ -286,6 +290,9 @@ export const def: AuthPlatformDef = {
   async signInUserWithMicrosoft() {
     await signInUserWithMicrosoftFB()
   },
+  async signInUserWithOpenid() {
+    await signInUserWithOpenidFB()
+  },
   async signInWithEmailLink(email: string, url: string) {
     const urlObject = new URL(url)
     const searchParams = new URLSearchParams(urlObject.search)
@@ -348,4 +355,5 @@ export const def: AuthPlatformDef = {
     }
   },
   getAllowedAuthProviders,
+  getOpenidMetadata,
 }

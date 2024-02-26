@@ -70,6 +70,54 @@ export class InfraConfigService implements OnModuleInit {
         value: process.env.MICROSOFT_CLIENT_SECRET,
       },
       {
+        name: InfraConfigEnum.OPENID_ISSUER_URL,
+        value: process.env.OPENID_ISSUER_URL,
+      },
+      {
+        name: InfraConfigEnum.OPENID_ISSUER_NAME,
+        value: process.env.OPENID_ISSUER_NAME,
+      },
+      {
+        name: InfraConfigEnum.OPENID_ISSUER_ICON_URL,
+        value: process.env.OPENID_ISSUER_ICON_URL,
+      },
+      {
+        name: InfraConfigEnum.OPENID_AUTHORIZATION_ENDPOINT,
+        value: process.env.OPENID_AUTHORIZATION_ENDPOINT,
+      },
+      {
+        name: InfraConfigEnum.OPENID_TOKEN_ENDPOINT,
+        value: process.env.OPENID_TOKEN_ENDPOINT,
+      },
+      {
+        name: InfraConfigEnum.OPENID_USERINFO_ENDPOINT,
+        value: process.env.OPENID_USERINFO_ENDPOINT,
+      },
+      {
+        name: InfraConfigEnum.OPENID_END_SESSION_ENDPOINT,
+        value: process.env.OPENID_END_SESSION_ENDPOINT,
+      },
+      {
+        name: InfraConfigEnum.OPENID_JWKS_URI,
+        value: process.env.OPENID_JWKS_URI,
+      },
+      {
+        name: InfraConfigEnum.OPENID_SCOPE,
+        value: process.env.OPENID_SCOPE,
+      },
+      {
+        name: InfraConfigEnum.OPENID_CALLBACK_URL,
+        value: process.env.OPENID_CALLBACK_URL,
+      },
+      {
+        name: InfraConfigEnum.OPENID_CLIENT_ID,
+        value: process.env.OPENID_CLIENT_ID,
+      },
+      {
+        name: InfraConfigEnum.OPENID_CLIENT_SECRET,
+        value: process.env.OPENID_CLIENT_SECRET,
+      },
+      {
         name: InfraConfigEnum.VITE_ALLOWED_AUTH_PROVIDERS,
         value: getConfiguredSSOProviders(),
       },
@@ -218,6 +266,8 @@ export class InfraConfigService implements OnModuleInit {
         );
       case AuthProvider.EMAIL:
         return configMap.MAILER_SMTP_URL && configMap.MAILER_ADDRESS_FROM;
+      case AuthProvider.OPENID:
+        return configMap.OPENID_CLIENT_ID && configMap.OPENID_CLIENT_SECRET;
       default:
         return false;
     }
@@ -309,6 +359,13 @@ export class InfraConfigService implements OnModuleInit {
     return this.configService
       .get<string>('INFRA.VITE_ALLOWED_AUTH_PROVIDERS')
       .split(',');
+  }
+
+  getOpenidIssuerMetadata() {
+    return {
+      name: this.configService.get('INFRA.OPENID_ISSUER_NAME'),
+      icon: this.configService.get('INFRA.OPENID_ISSUER_ICON_URL'),
+    };
   }
 
   /**

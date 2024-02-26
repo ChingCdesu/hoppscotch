@@ -107,6 +107,7 @@
     "continue_with_github": "Continue with GitHub",
     "continue_with_google": "Continue with Google",
     "continue_with_microsoft": "Continue with Microsoft",
+    "continue_with_openid": "Continue with { issuer }",
     "email": "Email",
     "logged_out": "Logged out",
     "login": "Login",

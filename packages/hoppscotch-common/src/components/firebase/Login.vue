@@ -116,7 +116,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, onMounted, ref } from "vue"
+import { Ref, computed, onMounted, ref } from "vue"
 
 import { useI18n } from "@composables/i18n"
 import { useStreamSubscriber } from "@composables/stream"
@@ -135,6 +135,9 @@ import { LoginItemDef } from "~/platform/auth"
 import { PersistenceService } from "~/services/persistence"
 
 import * as E from "fp-ts/Either"
+import { h } from "vue"
+import { VNode } from "vue"
+import { ComputedRef } from "vue"
 
 const emit = defineEmits<{
   (e: "hide-modal"): void
@@ -152,9 +155,12 @@ const form = {
 
 const isLoadingAllowedAuthProviders = ref(true)
 
+const openidMetadata = ref<Record<string, string>>({})
+
 const signingInWithGoogle = ref(false)
 const signingInWithGitHub = ref(false)
 const signingInWithMicrosoft = ref(false)
+const signingInWithOpenid = ref(false)
 const signingInWithEmail = ref(false)
 const mode = ref("sign-in")
 
@@ -163,7 +169,7 @@ const privacyPolicyLink = import.meta.env.VITE_APP_PRIVACY_POLICY_LINK
 
 type AuthProviderItem = {
   id: string
-  icon: typeof IconGithub
+  icon: typeof IconGithub | VNode
   label: string
   action: (...args: any[]) => any
   isLoading: Ref<boolean>
@@ -192,10 +198,19 @@ onMounted(async () => {
     return
   }
 
+  if (res.right.includes("OPENID")) {
+    const metadata = await platform.auth.getOpenidMetadata()
+
+    if (E.isRight(metadata)) {
+      openidMetadata.value = metadata.right
+    }
+  }
+
   // setup the normal auth providers
-  const enabledAuthProviders = authProvidersAvailable.filter((provider) =>
+  const enabledAuthProviders = authProvidersAvailable.value.filter((provider) =>
     res.right.includes(provider.id)
   )
+
   allowedAuthProviders = enabledAuthProviders
 
   // setup the additional login items
@@ -284,6 +299,19 @@ const signInWithMicrosoft = async () => {
   signingInWithMicrosoft.value = false
 }
 
+const signInWithOpenid = async () => {
+  signingInWithOpenid.value = true
+
+  try {
+    await platform.auth.signInUserWithOpenid()
+  } catch (e) {
+    console.error(e)
+    toast.error(`${t("error.something_went_wrong")}`)
+  }
+
+  signingInWithOpenid.value = false
+}
+
 const signInWithEmail = async () => {
   signingInWithEmail.value = true
 
@@ -303,7 +331,7 @@ const signInWithEmail = async () => {
     })
 }
 
-const authProvidersAvailable: AuthProviderItem[] = [
+const authProvidersAvailable: ComputedRef<AuthProviderItem[]> = computed(() => [
   {
     id: "GITHUB",
     icon: IconGithub,
@@ -326,6 +354,18 @@ const authProvidersAvailable: AuthProviderItem[] = [
     isLoading: signingInWithMicrosoft,
   },
   {
+    id: "OPENID",
+    icon: h("img", {
+      src: openidMetadata.value.icon,
+      alt: openidMetadata.value.name,
+    }),
+    label: t("auth.continue_with_openid", {
+      issuer: openidMetadata.value.name,
+    }),
+    action: signInWithOpenid,
+    isLoading: signingInWithOpenid,
+  },
+  {
     id: "EMAIL",
     icon: IconEmail,
     label: t("auth.continue_with_email"),
@@ -334,7 +374,7 @@ const authProvidersAvailable: AuthProviderItem[] = [
     },
     isLoading: signingInWithEmail,
   },
-]
+])
 
 const hideModal = () => {
   mode.value = "sign-in"

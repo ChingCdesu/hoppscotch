@@ -17,6 +17,7 @@ export default {
   refreshToken: () => restApi.get('/auth/refresh'),
   elevateUser: () => restApi.get('/auth/verify/admin'),
   getProviders: () => restApi.get('/auth/providers'),
+  getOpenidMetadata: () => restApi.get('/auth/openid/issuer-metadata'),
   sendMagicLink: (email: string) =>
     restApi.post('/auth/signin?origin=admin', {
       email,
