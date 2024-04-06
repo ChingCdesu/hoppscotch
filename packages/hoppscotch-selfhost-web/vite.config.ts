@@ -222,6 +222,7 @@ export default defineConfig({
           /announcements/,
           /admin/,
           /backend/,
+          /v1/,
         ],
       },
     }),

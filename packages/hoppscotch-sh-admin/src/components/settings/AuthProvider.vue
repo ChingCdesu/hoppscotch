@@ -31,7 +31,7 @@
 
           <div v-if="provider.enabled" class="ml-12">
             <div
-              v-for="field in providerConfigFields"
+              v-for="field in provider.name === 'openid' ? openidConfigFields : providerConfigFields"
               :key="field.key"
               class="mt-5"
             >
@@ -106,22 +106,22 @@ const providerConfigFields = <ProviderFieldMetadata[]>[
   {
     name: t('configs.auth_providers.client_id'),
     key: 'client_id',
-    applicableProviders: ['google', 'github', 'microsoft'],
+    applicableProviders: ['google', 'github', 'microsoft', 'openid'],
   },
   {
     name: t('configs.auth_providers.client_secret'),
     key: 'client_secret',
-    applicableProviders: ['google', 'github', 'microsoft'],
+    applicableProviders: ['google', 'github', 'microsoft', 'openid'],
   },
   {
     name: t('configs.auth_providers.callback_url'),
     key: 'callback_url',
-    applicableProviders: ['google', 'github', 'microsoft'],
+    applicableProviders: ['google', 'github', 'microsoft', 'openid'],
   },
   {
     name: t('configs.auth_providers.scope'),
     key: 'scope',
-    applicableProviders: ['google', 'github', 'microsoft'],
+    applicableProviders: ['google', 'github', 'microsoft', 'openid'],
   },
   {
     name: t('configs.auth_providers.tenant'),
@@ -129,6 +129,29 @@ const providerConfigFields = <ProviderFieldMetadata[]>[
     applicableProviders: ['microsoft'],
   },
 ];
+
+const openidConfigFields = reactive<Field[]>([
+  { name: t('configs.auth_providers.issuer_url'), key: 'issuer_url' },
+  { name: t('configs.auth_providers.issuer_name'), key: 'issuer_name' },
+  { name: t('configs.auth_providers.issuer_icon_url'), key: 'issuer_icon_url' },
+  {
+    name: t('configs.auth_providers.authorization_endpoint'),
+    key: 'authorization_endpoint',
+  },
+  { name: t('configs.auth_providers.token_endpoint'), key: 'token_endpoint' },
+  {
+    name: t('configs.auth_providers.userinfo_endpoint'),
+    key: 'userinfo_endpoint',
+  },
+  { name: t('configs.auth_providers.jwks_uri'), key: 'jwks_uri' },
+  { name: t('configs.auth_providers.scopes'), key: 'scopes' },
+  {
+    name: t('configs.auth_providers.end_session_endpoint'),
+    key: 'end_session_endpoint',
+  },
+  { name: t('configs.auth_providers.client_id'), key: 'client_id' },
+  { name: t('configs.auth_providers.client_secret'), key: 'client_secret' },
+]);
 
 const maskState = reactive<Record<SsoAuthProviders, ProviderFields>>({
   google: {
@@ -150,13 +173,19 @@ const maskState = reactive<Record<SsoAuthProviders, ProviderFields>>({
     scope: true,
     tenant: true,
   },
+  openid: {
+    client_id: true,
+    client_secret: true,
+  },
 });
 
 const toggleMask = (
   provider: SsoAuthProviders,
   fieldKey: ProviderFieldKeys
 ) => {
-  maskState[provider][fieldKey] = !maskState[provider][fieldKey];
+  if (fieldKey === 'client_id' || fieldKey === 'client_secret') {
+    maskState[provider][fieldKey] = !maskState[provider][fieldKey];
+  }
 };
 
 const isMasked = (provider: SsoAuthProviders, fieldKey: ProviderFieldKeys) =>

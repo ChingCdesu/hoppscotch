@@ -46,6 +46,16 @@
           @click="signInWithMicrosoft"
         />
         <HoppSmartItem
+          v-if="allowedAuthProviders.includes('OPENID')"
+          :loading="signingInWithOpenid"
+          :icon="
+            h('img', { src: openidMetadata.icon, alt: openidMetadata.name })
+          "
+          ref="openidButton"
+          :label="t('state.continue_openid', { issuer: openidMetadata.name })"
+          @click="signInWithOpenid"
+        />
+        <HoppSmartItem
           v-if="allowedAuthProviders.includes('EMAIL')"
           :icon="IconEmail"
           :label="t('state.continue_email')"
@@ -151,7 +161,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { HoppSmartItem } from '@hoppscotch/ui';
+import { h, onMounted, ref } from 'vue';
 import { useI18n } from '~/composables/i18n';
 import { useToast } from '~/composables/toast';
 import { auth } from '~/helpers/auth';
@@ -177,11 +188,14 @@ const error = ref(false);
 const signingInWithGoogle = ref(false);
 const signingInWithGitHub = ref(false);
 const signingInWithMicrosoft = ref(false);
+const signingInWithOpenid = ref(false);
 const signingInWithEmail = ref(false);
 const mode = ref('sign-in');
 const nonAdminUser = ref(false);
 
 const allowedAuthProviders = ref<string[]>([]);
+
+const openidMetadata = ref<Record<string, string>>({});
 
 onMounted(async () => {
   const user = auth.getCurrentUser();
@@ -189,6 +203,9 @@ onMounted(async () => {
     nonAdminUser.value = true;
   }
   allowedAuthProviders.value = await getAllowedAuthProviders();
+  if (allowedAuthProviders.value.includes('OPENID')) {
+    openidMetadata.value = await auth.getOpenidMetadata();
+  }
 });
 
 const signInWithGoogle = () => {
@@ -228,6 +245,19 @@ const signInWithMicrosoft = () => {
   }
 
   signingInWithMicrosoft.value = false;
+};
+
+const signInWithOpenid = () => {
+  signingInWithOpenid.value = true;
+
+  try {
+    auth.signInUserWithOpenid();
+  } catch (e) {
+    console.error(e);
+    toast.error(t('state.openid_signin_failure'));
+  }
+
+  signingInWithOpenid.value = false;
 };
 
 const signInWithEmail = async () => {

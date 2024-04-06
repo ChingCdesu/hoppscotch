@@ -43,3 +43,18 @@ export const updateUserDisplayName = (updatedDisplayName: string) =>
   >(UpdateUserDisplayNameDocument, {
     updatedDisplayName,
   })()
+
+export const getOpenidMetadata = async () => {
+  try {
+    const res = await axios.get(
+      `${import.meta.env.VITE_BACKEND_API_URL}/auth/openid/issuer-metadata`,
+      {
+        withCredentials: true,
+      }
+    )
+
+    return E.right(res.data?.metadata)
+  } catch (_) {
+    return E.left("SOMETHING_WENT_WRONG")
+  }
+}

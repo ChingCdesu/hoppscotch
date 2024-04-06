@@ -37,6 +37,19 @@ const AuthProviderConfigurations = {
     InfraConfigEnum.MAILER_SMTP_URL,
     InfraConfigEnum.MAILER_ADDRESS_FROM,
   ],
+  [AuthProvider.OPENID]: [
+    InfraConfigEnum.OPENID_ISSUER_NAME,
+    InfraConfigEnum.OPENID_ISSUER_URL,
+    InfraConfigEnum.OPENID_AUTHORIZATION_ENDPOINT,
+    InfraConfigEnum.OPENID_TOKEN_ENDPOINT,
+    InfraConfigEnum.OPENID_USERINFO_ENDPOINT,
+    InfraConfigEnum.OPENID_END_SESSION_ENDPOINT,
+    InfraConfigEnum.OPENID_JWKS_URI,
+    InfraConfigEnum.OPENID_SCOPE,
+    InfraConfigEnum.OPENID_CALLBACK_URL,
+    InfraConfigEnum.OPENID_CLIENT_ID,
+    InfraConfigEnum.OPENID_CLIENT_SECRET,
+  ],
 };
 
 /**

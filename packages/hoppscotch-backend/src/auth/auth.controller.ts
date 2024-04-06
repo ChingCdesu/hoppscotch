@@ -27,6 +27,7 @@ import { SkipThrottle } from '@nestjs/throttler';
 import { AUTH_PROVIDER_NOT_SPECIFIED } from 'src/errors';
 import { ConfigService } from '@nestjs/config';
 import { throwHTTPErr } from 'src/utils';
+import { OpenidSSOGuard } from './guards/openid-sso.guard';
 
 @UseGuards(ThrottlerBehindProxyGuard)
 @Controller({ path: 'auth', version: '1' })
@@ -169,6 +170,35 @@ export class AuthController {
       true,
       req.authInfo.state.redirect_uri,
     );
+  }
+
+  /**
+   ** Route to initiate SSO auth via OpenID
+   */
+  @Get('openid')
+  @UseGuards(OpenidSSOGuard)
+  async openidAuth(@Request() req) {}
+
+  /**
+   ** Get OpenID Issuer Metadata
+   */
+  @Get('openid/issuer-metadata')
+  async getOpenidIssuerMetadata() {
+    const metadata = this.authService.getOpenidIssuerMetadata();
+    return { metadata };
+  }
+
+  /**
+   ** Callback URL for OpenID SSO
+   * @see https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow#how-it-works
+   */
+  @Get('openid/callback')
+  @SkipThrottle()
+  @UseGuards(OpenidSSOGuard)
+  async openidAuthRedirect(@Request() req, @Res() res) {
+    const authTokens = await this.authService.generateAuthTokens(req.user.uid);
+    if (E.isLeft(authTokens)) throwHTTPErr(authTokens.left);
+    authCookieHandler(res, authTokens.right, true, req.authInfo.redirect);
   }
 
   /**

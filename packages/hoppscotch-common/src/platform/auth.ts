@@ -213,6 +213,11 @@ export type AuthPlatformDef = {
    * @returns A promise that resolves with the user info when auth is completed
    */
   signInUserWithMicrosoft: () => Promise<void>
+  /**
+   * Signs user in with OpenID Connect.
+   * @returns A promise that resolves with the user info when auth is completed
+   */
+  signInUserWithOpenid: () => Promise<void>
 
   /**
    * Signs out the user from auth
@@ -240,6 +245,11 @@ export type AuthPlatformDef = {
    * Returns the list of allowed auth providers for the platform ( the currently supported ones are GOOGLE, GITHUB, EMAIL, MICROSOFT, SAML )
    */
   getAllowedAuthProviders: () => Promise<E.Either<string, string[]>>
+
+  /**
+   * Returns OpenID Connect metadata if OPENID auth provider is allowed
+   */
+  getOpenidMetadata: () => Promise<E.Either<string, Record<string, string>>>
 
   /**
    * Defines the additional login items that should be shown in the login screen

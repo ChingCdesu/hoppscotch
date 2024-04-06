@@ -50,6 +50,98 @@ export class InfraConfigService implements OnModuleInit {
     await this.initializeInfraConfigTable();
   }
 
+  getDefaultInfraConfigs(): { name: InfraConfigEnum; value: string }[] {
+    // Prepare rows for 'infra_config' table with default values (from .env) for each 'name'
+    const infraConfigDefaultObjs: { name: InfraConfigEnum; value: string }[] = [
+      {
+        name: InfraConfigEnum.MAILER_SMTP_URL,
+        value: process.env.MAILER_SMTP_URL,
+      },
+      {
+        name: InfraConfigEnum.MAILER_ADDRESS_FROM,
+        value: process.env.MAILER_ADDRESS_FROM,
+      },
+      {
+        name: InfraConfigEnum.GOOGLE_CLIENT_ID,
+        value: process.env.GOOGLE_CLIENT_ID,
+      },
+      {
+        name: InfraConfigEnum.GOOGLE_CLIENT_SECRET,
+        value: process.env.GOOGLE_CLIENT_SECRET,
+      },
+      {
+        name: InfraConfigEnum.GITHUB_CLIENT_ID,
+        value: process.env.GITHUB_CLIENT_ID,
+      },
+      {
+        name: InfraConfigEnum.GITHUB_CLIENT_SECRET,
+        value: process.env.GITHUB_CLIENT_SECRET,
+      },
+      {
+        name: InfraConfigEnum.MICROSOFT_CLIENT_ID,
+        value: process.env.MICROSOFT_CLIENT_ID,
+      },
+      {
+        name: InfraConfigEnum.MICROSOFT_CLIENT_SECRET,
+        value: process.env.MICROSOFT_CLIENT_SECRET,
+      },
+      {
+        name: InfraConfigEnum.OPENID_ISSUER_URL,
+        value: process.env.OPENID_ISSUER_URL,
+      },
+      {
+        name: InfraConfigEnum.OPENID_ISSUER_NAME,
+        value: process.env.OPENID_ISSUER_NAME,
+      },
+      {
+        name: InfraConfigEnum.OPENID_ISSUER_ICON_URL,
+        value: process.env.OPENID_ISSUER_ICON_URL,
+      },
+      {
+        name: InfraConfigEnum.OPENID_AUTHORIZATION_ENDPOINT,
+        value: process.env.OPENID_AUTHORIZATION_ENDPOINT,
+      },
+      {
+        name: InfraConfigEnum.OPENID_TOKEN_ENDPOINT,
+        value: process.env.OPENID_TOKEN_ENDPOINT,
+      },
+      {
+        name: InfraConfigEnum.OPENID_USERINFO_ENDPOINT,
+        value: process.env.OPENID_USERINFO_ENDPOINT,
+      },
+      {
+        name: InfraConfigEnum.OPENID_END_SESSION_ENDPOINT,
+        value: process.env.OPENID_END_SESSION_ENDPOINT,
+      },
+      {
+        name: InfraConfigEnum.OPENID_JWKS_URI,
+        value: process.env.OPENID_JWKS_URI,
+      },
+      {
+        name: InfraConfigEnum.OPENID_SCOPE,
+        value: process.env.OPENID_SCOPE,
+      },
+      {
+        name: InfraConfigEnum.OPENID_CALLBACK_URL,
+        value: process.env.OPENID_CALLBACK_URL,
+      },
+      {
+        name: InfraConfigEnum.OPENID_CLIENT_ID,
+        value: process.env.OPENID_CLIENT_ID,
+      },
+      {
+        name: InfraConfigEnum.OPENID_CLIENT_SECRET,
+        value: process.env.OPENID_CLIENT_SECRET,
+      },
+      {
+        name: InfraConfigEnum.VITE_ALLOWED_AUTH_PROVIDERS,
+        value: getConfiguredSSOProviders(),
+      },
+    ];
+
+    return infraConfigDefaultObjs;
+  }
+
   /**
    * Initialize the 'infra_config' table with values from .env
    * @description This function create rows 'infra_config' in very first time (only once)
@@ -199,6 +291,8 @@ export class InfraConfigService implements OnModuleInit {
         );
       case AuthProvider.EMAIL:
         return configMap.MAILER_SMTP_URL && configMap.MAILER_ADDRESS_FROM;
+      case AuthProvider.OPENID:
+        return configMap.OPENID_CLIENT_ID && configMap.OPENID_CLIENT_SECRET;
       default:
         return false;
     }
@@ -315,6 +409,13 @@ export class InfraConfigService implements OnModuleInit {
     return this.configService
       .get<string>('INFRA.VITE_ALLOWED_AUTH_PROVIDERS')
       .split(',');
+  }
+
+  getOpenidIssuerMetadata() {
+    return {
+      name: this.configService.get('INFRA.OPENID_ISSUER_NAME'),
+      icon: this.configService.get('INFRA.OPENID_ISSUER_ICON_URL'),
+    };
   }
 
   /**

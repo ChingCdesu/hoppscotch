@@ -176,6 +176,7 @@ export default defineConfig({
           /twitter/,
           /github/,
           /announcements/,
+          /v1/,
         ],
       },
     }),

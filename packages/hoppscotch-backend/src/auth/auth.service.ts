@@ -186,7 +186,7 @@ export class AuthService {
       where: {
         verifyProviderAccount: {
           provider: SSOUserData.provider,
-          providerAccountId: SSOUserData.id,
+          providerAccountId: SSOUserData.id || SSOUserData.sub,
         },
       },
     });
@@ -386,5 +386,9 @@ export class AuthService {
 
   getAuthProviders() {
     return this.infraConfigService.getAllowedAuthProviders();
+  }
+
+  getOpenidIssuerMetadata() {
+    return this.infraConfigService.getOpenidIssuerMetadata();
   }
 }
