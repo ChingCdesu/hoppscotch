@@ -8,7 +8,11 @@ import { PersistenceService } from "@hoppscotch/common/services/persistence"
 import axios from "axios"
 import { BehaviorSubject, Subject } from "rxjs"
 import { Ref, ref, watch } from "vue"
-import { getAllowedAuthProviders, updateUserDisplayName, getOpenidMetadata } from "./auth.api"
+import {
+  getAllowedAuthProviders,
+  updateUserDisplayName,
+  getOpenidMetadata,
+} from "./auth.api"
 import * as E from "fp-ts/Either"
 
 export const authEvents$ = new Subject<AuthEvent | { event: "token_refresh" }>()
