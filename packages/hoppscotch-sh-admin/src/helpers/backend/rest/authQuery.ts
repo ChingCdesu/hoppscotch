@@ -30,5 +30,7 @@ export default {
       token,
       deviceIdentifier,
     }),
+  getFirstTimeInfraSetupStatus: () => restApi.get('/site/setup'),
+  updateFirstTimeInfraSetupStatus: () => restApi.put('/site/setup'),
   logout: () => restApi.get('/auth/logout'),
 };

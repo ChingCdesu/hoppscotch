@@ -33,11 +33,10 @@
               class="mt-5"
             >
               <label>{{ field.name }}</label>
-              <span class="flex">
+              <span class="flex max-w-lg">
                 <HoppSmartInput
                   v-model="smtpConfigs.fields[field.key]"
                   :type="isMasked(field.key) ? 'password' : 'text'"
-                  :disabled="isMasked(field.key)"
                   :autofocus="false"
                   class="!my-2 !bg-primaryLight flex-1"
                 />

@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { DateTime } from 'luxon';
-import { AuthError } from 'src/types/AuthError';
 import { AuthTokens } from 'src/types/AuthTokens';
 import { Response } from 'express';
 import * as cookie from 'cookie';
@@ -24,15 +23,6 @@ export enum AuthProvider {
   MICROSOFT = 'MICROSOFT',
   EMAIL = 'EMAIL',
   OPENID = 'OPENID',
-}
-
-/**
- * This function allows throw to be used as an expression
- * @param errMessage Message present in the error message
- */
-export function throwHTTPErr(errorData: AuthError): never {
-  const { message, statusCode } = errorData;
-  throw new HttpException(message, statusCode);
 }
 
 /**
