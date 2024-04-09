@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthProvider, authProviderCheck, throwHTTPErr } from '../helper';
+import { AuthProvider, authProviderCheck } from '../helper';
+import { throwHTTPErr } from 'src/utils';
 import { Observable } from 'rxjs';
 import { AUTH_PROVIDER_NOT_SPECIFIED } from 'src/errors';
 import { ConfigService } from '@nestjs/config';
