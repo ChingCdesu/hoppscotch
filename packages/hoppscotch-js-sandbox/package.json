@@ -53,7 +53,6 @@
   "dependencies": {
     "@hoppscotch/data": "workspace:^",
     "@types/lodash-es": "4.17.12",
-    "axios": "1.6.8",
     "fp-ts": "2.12.1",
     "lodash": "4.17.21",
     "lodash-es": "4.17.21",
