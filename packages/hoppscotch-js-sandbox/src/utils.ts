@@ -11,6 +11,10 @@ import {
   TestResult,
 } from "./types"
 
+import axios from "axios"
+import jsencrypt from "jsencrypt"
+import _ from "lodash"
+
 const getEnv = (envName: string, envs: TestResult["envs"]) => {
   return O.fromNullable(
     envs.selected.find((x: SelectedEnvItem) => x.key === envName) ??
@@ -177,6 +181,9 @@ const getSharedMethods = (envs: TestResult["envs"]) => {
         unset: envUnsetFn,
         resolve: envResolveFn,
       },
+      axios,
+      jsencrypt,
+      _, // lodash
     },
     updatedEnvs,
   }
