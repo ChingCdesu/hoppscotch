@@ -163,6 +163,8 @@
       "label_client_credentials": "Client Credentials"
     },
     "pass_key_by": "Pass by",
+    "pass_by_query_params_label": "Query Parameters",
+    "pass_by_headers_label": "Headers",
     "password": "Password",
     "save_to_inherit": "Please save this request in any collection to inherit the authorization",
     "token": "Token",
@@ -174,6 +176,7 @@
     "different_parent": "Cannot reorder collection with different parent",
     "edit": "Edit Collection",
     "import_or_create": "Import or create a collection",
+    "import_collection":"Import Collection",
     "invalid_name": "Please provide a name for the collection",
     "invalid_root_move": "Collection already in the root",
     "moved": "Moved Successfully",
@@ -372,7 +375,8 @@
     "mutations": "Mutations",
     "schema": "Schema",
     "subscriptions": "Subscriptions",
-    "switch_connection": "Switch connection"
+    "switch_connection": "Switch connection",
+    "url_placeholder": "Enter a GraphQL endpoint URL"
   },
   "graphql_collections": {
     "title": "GraphQL Collections"
@@ -596,6 +600,7 @@
     "title": "Request",
     "type": "Request type",
     "url": "URL",
+    "url_placeholder": "Enter a URL or paste a cURL command",
     "variables": "Variables",
     "view_my_links": "View my links"
   },
@@ -848,6 +853,13 @@
       "new": "Create new workspace",
       "switch_to_personal": "Switch to your personal workspace",
       "title": "Workspaces"
+    },
+    "phrases":{
+      "try": "Try",
+      "import_collections": "Import collections",
+      "create_environment": "Create environment",
+      "create_workspace": "Create workspace",
+      "share_request": "Share request"
     }
   },
   "sse": {

@@ -40,6 +40,7 @@ const AuthProviderConfigurations = {
   [AuthProvider.OPENID]: [
     InfraConfigEnum.OPENID_ISSUER_NAME,
     InfraConfigEnum.OPENID_ISSUER_URL,
+    InfraConfigEnum.OPENID_ISSUER_ICON_URL,
     InfraConfigEnum.OPENID_AUTHORIZATION_ENDPOINT,
     InfraConfigEnum.OPENID_TOKEN_ENDPOINT,
     InfraConfigEnum.OPENID_USERINFO_ENDPOINT,
@@ -170,18 +171,32 @@ export async function getDefaultInfraConfigs(): Promise<
 }
 
 /**
+ * Get the missing entries in the 'infra_config' table
+ * @returns Array of InfraConfig
+ */
+export async function getMissingInfraConfigEntries() {
+  const prisma = new PrismaService();
+  const [dbInfraConfigs, infraConfigDefaultObjs] = await Promise.all([
+    prisma.infraConfig.findMany(),
+    getDefaultInfraConfigs(),
+  ]);
+
+  const missingEntries = infraConfigDefaultObjs.filter(
+    (config) =>
+      !dbInfraConfigs.some((dbConfig) => dbConfig.name === config.name),
+  );
+
+  return missingEntries;
+}
+
+/**
  * Verify if 'infra_config' table is loaded with all entries
  * @returns boolean
  */
 export async function isInfraConfigTablePopulated(): Promise<boolean> {
   const prisma = new PrismaService();
   try {
-    const dbInfraConfigs = await prisma.infraConfig.findMany();
-    const infraConfigDefaultObjs = await getDefaultInfraConfigs();
-
-    const propsRemainingToInsert = infraConfigDefaultObjs.filter(
-      (p) => !dbInfraConfigs.find((e) => e.name === p.name),
-    );
+    const propsRemainingToInsert = await getMissingInfraConfigEntries();
 
     if (propsRemainingToInsert.length > 0) {
       console.log(
